@@ -16,7 +16,7 @@ app.config['CSS_VERSION'] = 1 # Increment this number to force CSS refresh
 
 
 def get_db_connection():
-    conn = sqlite3.connect('sales.db')
+    conn = sqlite3.connect('/tmp/sales.db')
     conn.row_factory = sqlite3.Row
     return conn
 

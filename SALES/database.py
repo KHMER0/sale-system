@@ -3,7 +3,7 @@ import datetime
 import random
 
 def init_db():
-    conn = sqlite3.connect('sales.db')
+    conn = sqlite3.connect('/tmp/sales.db')
     cursor = conn.cursor()
 
     # Create users table
@@ -94,7 +94,7 @@ def init_db():
     conn.close()
 
 def populate_with_more_data():
-    conn = sqlite3.connect('sales.db')
+    conn = sqlite3.connect('/tmp/sales.db')
     cursor = conn.cursor()
 
     # Check if we need to populate
@@ -157,7 +157,7 @@ def populate_with_more_data():
     conn.close()
 
 def migrate_db():
-    conn = sqlite3.connect('sales.db')
+    conn = sqlite3.connect('/tmp/sales.db')
     cursor = conn.cursor()
 
     # Add creator_id to users table if not exists
