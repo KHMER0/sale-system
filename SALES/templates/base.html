@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}業務部智慧化銷售系統{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css', v=config['CSS_VERSION']) }}">
+</head>
+<body>
+    <div class="dashboard">
+        <nav class="sidebar">
+            <div class="menu-items">
+                <a href="{{ url_for('dashboard') }}">儀表板</a>
+                <a href="{{ url_for('orders') }}">訂單查詢</a>
+                <a href="{{ url_for('quotes') }}">報價單查詢</a>
+                <a href="{{ url_for('customers') }}">客戶資料查詢</a>
+                <a href="{{ url_for('automation') }}">報價與訂單處理自動化</a>
+                <a href="{{ url_for('analysis') }}">數據分析與市場建議推送</a>
+                <a href="{{ url_for('ai_features') }}">AI輔助商機預測與客戶群</a>
+                <a href="{{ url_for('users') }}">帳號管理</a>
+                <a href="{{ url_for('logout') }}" class="logout">登出</a>
+            </div>
+        </nav>
+        
+        <main class="main-content">
+            {% block content %}
+            <!-- Content will be inserted here by child templates -->
+            {% endblock %}
+        </main>
+    </div>
+
+    <!-- Chatbot Icon -->
+    <div class="chatbot-icon" id="chatbot-icon">
+        💬
+    </div>
+
+    <!-- Chatbot Window -->
+    <div class="chatbot-window" id="chatbot-window">
+        <div class="chat-header">
+            銷售管理系統助理
+            <span class="close-chat" id="close-chat">&times;</span>
+        </div>
+        <div class="chat-messages" id="chat-messages">
+            <!-- Chat messages will be loaded here -->
+        </div>
+        <div class="chat-input-area">
+            <input type="text" id="user-input" placeholder="輸入您的訊息...">
+            <button id="send-button">發送</button>
+        </div>
+    </div>
+
+    <script>
+        const chatbotIcon = document.getElementById('chatbot-icon');
+        const chatbotWindow = document.getElementById('chatbot-window');
+        const closeChat = document.getElementById('close-chat');
+        const chatMessages = document.getElementById('chat-messages');
+        const userInput = document.getElementById('user-input');
+        const sendButton = document.getElementById('send-button');
+
+        chatbotIcon.addEventListener('click', () => {
+            chatbotWindow.classList.toggle('open');
+            if (chatbotWindow.classList.contains('open')) {
+                loadChatHistory(); // Load history when opening
+            }
+        });
+
+        closeChat.addEventListener('click', () => {
+            chatbotWindow.classList.remove('open');
+        });
+
+        function appendMessage(sender, message) {
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('message', sender);
+            const messageBubble = document.createElement('div');
+            messageBubble.classList.add('message-bubble');
+            
+            // Revert to textContent for bot messages as well
+            messageBubble.textContent = message;
+            
+            messageDiv.appendChild(messageBubble);
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight; // Auto-scroll to bottom
+        }
+
+        async function sendMessage() {
+            const message = userInput.value.trim();
+            if (message === '') return;
+
+            appendMessage('user', message);
+            userInput.value = ''; // Clear input field
+
+            // Add a loading indicator
+            const loadingDiv = document.createElement('div');
+            loadingDiv.classList.add('loading-indicator');
+            loadingDiv.textContent = '助理正在思考中...';
+            chatMessages.appendChild(loadingDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+
+            try {
+                const response = await fetch('/chatbot_api', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ message: message })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                chatMessages.removeChild(loadingDiv); // Remove loading indicator
+                appendMessage('bot', data.response);
+            } catch (error) {
+                console.error('Error sending message:', error);
+                chatMessages.removeChild(loadingDiv); // Remove loading indicator
+                appendMessage('bot', '抱歉，與助理通訊時發生錯誤。請稍後再試。');
+            }
+        }
+
+        async function loadChatHistory() {
+            try {
+                const response = await fetch('/get_chatbot_history');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                chatMessages.innerHTML = ''; // Clear existing messages before loading history
+                data.history.forEach(item => {
+                    appendMessage(item.role === 'user' ? 'user' : 'bot', item.content);
+                });
+            } catch (error) {
+                console.error('Error loading chat history:', error);
+            }
+        }
+
+        sendButton.addEventListener('click', sendMessage);
+        userInput.addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
+        // Load chat history when the page loads (if chatbot window is open by default, or when it's opened)
+        // For now, it loads when the icon is clicked and the window opens.
+    </script>
+</body>
+</html>

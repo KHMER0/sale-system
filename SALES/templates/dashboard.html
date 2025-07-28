@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}業務部智慧化銷售系統 - 儀表板{% endblock %}
+
+{% block content %}
+            <!-- 歡迎區 -->
+            <section class="welcome-banner">
+                <h1>歡迎回來，{{ user.name }}！</h1>
+                <p>今天是 {{ current_date }}</p>
+            </section>
+
+            <!-- 痛點分析區 -->
+            <section class="problems">
+                <h2>報價與訂單</h2>
+                <div class="grid">
+                    <a href="{{ url_for('orders') }}" class="card">
+                        <span class="icon">📄</span>
+                        <p>訂單紀錄查詢</p>
+                    </a>
+                    <a href="{{ url_for('quotes') }}" class="card">
+                        <span class="icon">📄</span>
+                        <p>報價單查詢</p>
+                    </a>
+                    <a href="{{ url_for('customers') }}" class="card">
+                        <span class="icon">📪</span>
+                        <p>客戶資料查詢</p>
+                    </a>
+                </div>
+            </section>
+
+            <!-- 解決方案區 -->
+            <section class="solutions">
+                <h2>AI智能功能</h2>
+                <div class="grid">
+                    <div class="card">
+                        <span class="icon">⚙️</span>
+                        <p>報價與訂單處理自動化</p>
+                    </div>
+                    <div class="card">
+                        <span class="icon">📊</span>
+                        <p>數據分析與市場建議推送</p>
+                    </div>
+                    <div class="card">
+                        <span class="icon">🤖</span>
+                        <p>AI 輔助商機預測與客戶群</p>
+                    </div>
+                </div>
+            </section>
+{% endblock %}

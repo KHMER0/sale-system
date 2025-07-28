@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}報價與訂單處理自動化 - 業務部智慧化銷售系統{% endblock %}
+
+{% block content %}
+            <h1>報價與訂單處理自動化</h1>
+            <section>
+                <h2>將已接受的報價單轉換為訂單</h2>
+                <p>這裡會列出所有狀態為「已接受」的報價單。您可以點擊「轉換為訂單」按鈕，系統將會自動為您建立一筆對應的新訂單。</p>
+            </section>
+            
+            <!-- Accepted Quotes Table -->
+            <h2>待處理的報價單</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>報價單ID</th>
+                        <th>客戶ID</th>
+                        <th>報價日期</th>
+                        <th>金額</th>
+                        <th>狀態</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for quote in accepted_quotes %}
+                    <tr>
+                        <td>{{ quote.id }}</td>
+                        <td>{{ quote.customer_id }}</td>
+                        <td>{{ quote.quote_date }}</td>
+                        <td>{{ quote.amount }}</td>
+                        <td>{{ quote.status }}</td>
+                        <td class="actions">
+                            <form action="{{ url_for('convert_to_order', quote_id=quote.id) }}" method="POST">
+                                <button type="submit" class="btn">轉換為訂單</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="6" style="text-align: center;">目前沒有已接受的報價單。</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+{% endblock %}

@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}修改帳號 - 業務部智慧化銷售系統{% endblock %}
+
+{% block content %}
+            <h1>修改帳號</h1>
+            <div class="form-container">
+                <form method="POST">
+                    <div class="form-group">
+                        <label for="employee_id">員工ID (無法修改)</label>
+                        <input type="text" id="employee_id" name="employee_id" value="{{ user_to_edit.employee_id }}" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="name">姓名 (無法修改)</label>
+                        <input type="text" id="name" name="name" value="{{ user_to_edit.name }}" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">新密碼 (留空則不修改)</label>
+                        <input type="password" id="password" name="password">
+                    </div>
+
+                    {# --- Role Selection for Admins --- #}
+                    {% if session.role in ['system_admin', 'administrator'] %}
+                    <div class="form-group">
+                        <label for="role">權限</label>
+                        <select id="role" name="role">
+                            <option value="user" {% if user_to_edit.role == 'user' %}selected{% endif %}>一般使用者</option>
+                            <option value="administrator" {% if user_to_edit.role == 'administrator' %}selected{% endif %}>管理員</option>
+                            {% if session.role == 'system_admin' %}
+                            <option value="system_admin" {% if user_to_edit.role == 'system_admin' %}selected{% endif %}>系統管理員</option>
+                            {% endif %}
+                        </select>
+                    </div>
+                    {% endif %}
+
+                    <button type="submit" class="btn">儲存變更</button>
+                    <a href="{{ url_for('users') }}" class="btn btn-secondary">取消</a>
+                </form>
+            </div>
+{% endblock %}

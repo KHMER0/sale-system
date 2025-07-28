@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block title %}修改報價單 - 業務部智慧化銷售系統{% endblock %}
+
+{% block content %}
+            <h1>修改報價單</h1>
+            <div class="form-container">
+                <form method="POST">
+                    <div class="form-group">
+                        <label for="customer_id">客戶ID</label>
+                        <input type="number" id="customer_id" name="customer_id" value="{{ quote.customer_id }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="quote_date">報價日期</label>
+                        <input type="date" id="quote_date" name="quote_date" value="{{ quote.quote_date }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="amount">金額</label>
+                        <input type="number" step="0.01" id="amount" name="amount" value="{{ quote.amount }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="status">狀態</label>
+                        <select id="status" name="status" required>
+                            <option value="草稿" {% if quote.status == '草稿' %}selected{% endif %}>草稿</option>
+                            <option value="已發送" {% if quote.status == '已發送' %}selected{% endif %}>已發送</option>
+                            <option value="已接受" {% if quote.status == '已接受' %}selected{% endif %}>已接受</option>
+                            <option value="已拒絕" {% if quote.status == '已拒絕' %}selected{% endif %}>已拒絕</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn">儲存變更</button>
+                    <a href="{{ url_for('quotes') }}" class="btn btn-secondary">取消</a>
+                </form>
+            </div>
+{% endblock %}

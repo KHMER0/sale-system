@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block title %}數據分析與市場建議 - 業務部智慧化銷售系統{% endblock %}
+
+{% block content %}
+            <h1>數據分析與市場建議</h1>
+
+            <div class="analysis-grid">
+                <section class="card main-metric">
+                    <h3><i class="fas fa-chart-line"></i> 銷售總覽</h3>
+                    <p>總訂單數：{{ sales_summary.total_orders }}</p>
+                    <p>總銷售額：NT$ {{ "{:,.2f}".format(sales_summary.total_revenue) }}</p>
+                    <p>平均訂單金額：NT$ {{ "{:,.2f}".format(sales_summary.average_order_value) }}</p>
+                </section>
+
+                <section class="card secondary-metric">
+                    <h3><i class="fas fa-chart-pie"></i> 報價單轉換率</h3>
+                    <p>總報價單數：{{ quote_summary.total_quotes }}</p>
+                    <p>成功轉換數：{{ quote_summary.converted_quotes }}</p>
+                    <p>轉換率：{{ "{:.2%}".format(quote_summary.conversion_rate) }}</p>
+                </section>
+
+                <section class="card list-card">
+                    <h3><i class="fas fa-crown"></i> 頂尖客戶</h3>
+                    <ol>
+                        {% for customer in top_customers %}
+                        <li>{{ customer.name }} (NT$ {{ "{:,.2f}".format(customer.total_spent) }})</li>
+                        {% else %}
+                        <li>尚無資料</li>
+                        {% endfor %}
+                    </ol>
+                </section>
+
+                <section class="card list-card">
+                    <h3><i class="fas fa-tasks"></i> 訂單狀態分佈</h3>
+                    <ul>
+                        {% for status in order_status_distribution %}
+                        <li>{{ status.status }}: {{ status.count }} 筆</li>
+                        {% else %}
+                        <li>尚無資料</li>
+                        {% endfor %}
+                    </ul>
+                </section>
+
+                <section class="card suggestions-card">
+                    <h3><i class="fas fa-lightbulb"></i> 市場建議</h3>
+                    {% if suggestions %}
+                        <ul>
+                            {% for suggestion in suggestions %}
+                                <li>{{ suggestion }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p>目前沒有可用的市場建議。</p>
+                    {% endif %}
+                </section>
+            </div>
+{% endblock %}

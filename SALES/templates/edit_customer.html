@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}修改客戶 - 業務部智慧化銷售系統{% endblock %}
+
+{% block content %}
+            <h1>修改客戶</h1>
+            <div class="form-container">
+                <form method="POST">
+                    <div class="form-group">
+                        <label for="name">公司名稱</label>
+                        <input type="text" id="name" name="name" value="{{ customer.name }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="contact_person">聯絡人</label>
+                        <input type="text" id="contact_person" name="contact_person" value="{{ customer.contact_person }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">電話</label>
+                        <input type="text" id="phone" name="phone" value="{{ customer.phone }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" value="{{ customer.email }}">
+                    </div>
+                    <button type="submit" class="btn">儲存變更</button>
+                    <a href="{{ url_for('customers') }}" class="btn btn-secondary">取消</a>
+                </form>
+            </div>
+{% endblock %}

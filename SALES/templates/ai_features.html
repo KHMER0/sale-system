@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block title %}AI輔助商機預測與客戶群 - 業務部智慧化銷售系統{% endblock %}
+
+{% block content %}
+            <h1>AI輔助商機預測與客戶群</h1>
+
+            <section>
+                <h2><i class="fas fa-brain"></i> 商機預測 (客戶評分)</h2>
+                <p>系統根據客戶的歷史訂單數量、接受的報價單數量及消費總額，為每位客戶計算出一個「商機分數」。分數越高的客戶，在未來可能帶來越高的價值。</p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>排名</th>
+                            <th>客戶名稱</th>
+                            <th>商機分數</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for customer in scored_customers %}
+                        <tr>
+                            <td>{{ loop.index }}</td>
+                            <td>{{ customer.name }}</td>
+                            <td>{{ customer.score }}</td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="3" style="text-align: center;">尚無足夠資料進行預測。</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </section>
+
+            <section>
+                <h2><i class="fas fa-users"></i> 客戶群分組</h2>
+                <p>系統根據客戶的總消費金額，將客戶分為「高價值」、「中價值」與「潛力客戶」三個群體，幫助您進行更精準的客戶關係管理。</p>
+                <div class="grid">
+                    <div class="card">
+                        <h3>高價值客戶</h3>
+                        <ul>
+                            {% for customer in segments.high_value %}
+                            <li>{{ customer.name }} (NT$ {{ "{:,.2f}".format(customer.total_spent) }})</li>
+                            {% else %}<li>尚無資料</li>{% endfor %}
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h3>中價值客戶</h3>
+                        <ul>
+                            {% for customer in segments.mid_value %}
+                            <li>{{ customer.name }} (NT$ {{ "{:,.2f}".format(customer.total_spent) }})</li>
+                            {% else %}<li>尚無資料</li>{% endfor %}
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h3>潛力客戶</h3>
+                        <ul>
+                            {% for customer in segments.low_value %}
+                            <li>{{ customer.name }} (NT$ {{ "{:,.2f}".format(customer.total_spent) }})</li>
+                            {% else %}<li>尚無資料</li>{% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </section>
+{% endblock %}

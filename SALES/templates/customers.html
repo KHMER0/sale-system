@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block title %}客戶管理 - 業務部智慧化銷售系統{% endblock %}
+
+{% block content %}
+            <h1>客戶管理</h1>
+
+            <!-- Add Customer Form -->
+            <div class="form-container">
+                <h2>新增客戶</h2>
+                <form action="{{ url_for('add_customer') }}" method="POST">
+                    <div class="form-group">
+                        <label for="name">公司名稱</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="contact_person">聯絡人</label>
+                        <input type="text" id="contact_person" name="contact_person">
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">電話</label>
+                        <input type="text" id="phone" name="phone">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email">
+                    </div>
+                    <button type="submit" class="btn">新增客戶</button>
+                </form>
+            </div>
+
+            <!-- Search Form -->
+            <div class="search-container">
+                <form action="{{ url_for('customers') }}" method="GET">
+                    <input type="text" name="search" placeholder="搜尋客戶..." value="{{ search_query or '' }}">
+                    <button type="submit" class="btn">搜尋</button>
+                </form>
+            </div>
+
+            <!-- Customers Table -->
+            <h2>客戶列表</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>公司名稱</th>
+                        <th>聯絡人</th>
+                        <th>電話</th>
+                        <th>Email</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for customer in customers %}
+                    <tr>
+                        <td>{{ customer.id }}</td>
+                        <td>{{ customer.name }}</td>
+                        <td>{{ customer.contact_person }}</td>
+                        <td>{{ customer.phone }}</td>
+                        <td>{{ customer.email }}</td>
+                        <td class="actions">
+                            <a href="{{ url_for('edit_customer', customer_id=customer.id) }}" class="btn btn-edit">修改</a>
+                            <form action="{{ url_for('delete_customer', customer_id=customer.id) }}" method="POST" style="display:inline;">
+                                <button type="submit" class="btn btn-delete" onclick="return confirm('確定要刪除這位客戶嗎？');">刪除</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+{% endblock %}
