@@ -811,3 +811,8 @@ def delete_user(user_id):
 def logout():
     session.clear()
     return redirect(url_for('login'))
+if __name__ == "__main__":
+    database.init_db()
+    database.migrate_db()
+    database.populate_with_more_data()
+    app.run(debug=True)
